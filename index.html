@@ -1,0 +1,261 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Archive · Playable Thoughts</title>
+<meta name="description" content="Everything I've watched: films, shows and anime.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2312141C'/%3E%3Crect x='6' y='9' width='20' height='3' rx='1.5' fill='%23EFA65C'/%3E%3Crect x='6' y='15' width='14' height='3' rx='1.5' fill='%2357A98D'/%3E%3Crect x='6' y='21' width='17' height='3' rx='1.5' fill='%23D3766B'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Archivo:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#12141C;--panel:#191D28;--raised:#202634;--line:#2C3341;--cream:#E9E4D8;--muted:#7E8798;--amber:#EFA65C;--jade:#57A98D;--rose:#D3766B}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--ink);color:var(--cream);font-family:Archivo,system-ui,sans-serif}
+button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer}
+a{color:inherit}
+.mono{font-family:'JetBrains Mono',monospace}
+header{padding:20px 16px 12px;border-bottom:1px solid var(--line)}
+.title-row{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:12px}
+h1{margin:0;font:800 26px 'Bricolage Grotesque',sans-serif;letter-spacing:-.04em}
+.count{font-size:10px;color:var(--muted)}
+.spectrum{display:flex;height:14px;gap:1px;border-radius:4px;overflow:hidden}
+.spectrum i{display:block;min-width:2px;cursor:pointer}
+.bar{padding:12px 16px;border-bottom:1px solid var(--line)}
+input[type=search]{width:100%;background:var(--panel);color:var(--cream);border:1px solid var(--line);border-radius:10px;padding:9px 12px;font-size:14px}
+.tabs{display:flex;gap:4px;padding:8px 12px;overflow-x:auto;border-bottom:1px solid var(--line)}
+.tabs button{padding:6px 12px;border-radius:99px;border:1px solid var(--line);color:var(--muted);font-size:12px;white-space:nowrap}
+.tabs button.on{background:var(--cream);color:var(--ink);border-color:var(--cream)}
+.sortrow{display:flex;justify-content:space-between;align-items:center;padding:8px 16px}
+select{background:var(--panel);color:var(--cream);border:1px solid var(--line);border-radius:8px;padding:4px 8px;font-size:11px}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:12px}
+@media(min-width:640px){.grid{grid-template-columns:repeat(5,1fr)}}
+@media(min-width:1000px){.grid{grid-template-columns:repeat(8,1fr)}}
+.tile{text-align:left;background:var(--panel);border:1px solid var(--line);border-radius:8px;overflow:hidden;display:block;width:100%}
+.tile:focus-visible{outline:2px solid var(--amber)}
+.cover{aspect-ratio:2/3;position:relative;background:var(--raised);overflow:hidden}
+.cover img{width:100%;height:100%;object-fit:cover;display:block}
+.ph{position:absolute;inset:0;padding:10px;display:flex;flex-direction:column;justify-content:space-between}
+.ph b{display:block;height:3px;width:38%;border-radius:2px}
+.ph span{font:700 13px/1.12 'Bricolage Grotesque',sans-serif;letter-spacing:-.02em;display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden}
+.badge{position:absolute;top:6px;font-size:10px}
+.tile .meta{padding:6px 8px 8px}
+.tile .nm{font-size:11px;line-height:1.25;height:28px;overflow:hidden}
+.tile .sub{display:flex;justify-content:space-between;margin-top:4px;font-size:9px;color:var(--muted)}
+.more{display:block;margin:8px 12px 110px;width:calc(100% - 24px);padding:12px;border-radius:10px;background:var(--panel);border:1px solid var(--line);font-size:13px}
+footer{padding:0 16px 40px;font-size:10px;color:var(--muted);line-height:1.6}
+.scrim{position:fixed;inset:0;background:rgba(6,8,12,.72);z-index:50;display:none;align-items:flex-end;justify-content:center}
+.scrim.open{display:flex}
+@media(min-width:640px){.scrim{align-items:center}}
+.sheet{width:100%;max-width:520px;max-height:90vh;overflow-y:auto;background:var(--panel);border:1px solid var(--line);border-radius:16px 16px 0 0}
+@media(min-width:640px){.sheet{border-radius:16px}}
+.banner{height:120px;position:relative;overflow:hidden}
+.banner img{width:100%;height:100%;object-fit:cover;opacity:.55}
+.banner:after{content:"";position:absolute;inset:0;background:linear-gradient(to bottom,transparent 40%,var(--panel))}
+.sec{padding:16px;border-bottom:1px solid var(--line)}
+.head{display:flex;gap:12px}
+.head .cover{width:76px;flex-shrink:0;border-radius:6px}
+.h2{font:700 18px/1.15 'Bricolage Grotesque',sans-serif;letter-spacing:-.02em}
+.lbl{font-size:10px;color:var(--muted);line-height:1.7}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+.chip{font-size:11px;border:1px solid var(--line);background:var(--raised);border-radius:6px;padding:4px 8px;text-decoration:none;display:inline-block}
+.chip.hot{background:var(--amber);border-color:var(--amber);color:var(--ink)}
+.rate{display:flex;gap:4px;margin-top:6px}.rate i{flex:1;height:22px;border-radius:4px;background:var(--raised);border:1px solid var(--line)}
+.rate i.on{background:var(--jade)}
+.recs{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px}
+.rec{width:72px;flex-shrink:0;text-align:left}
+.rec .cover{border-radius:6px;border:1px solid var(--line)}
+.rec.in .cover{border-color:var(--jade)}
+.review{background:var(--ink);border:1px solid var(--line);border-radius:8px;padding:8px;margin-bottom:8px;font-size:12px;line-height:1.45}
+.season>button{width:100%;display:flex;justify-content:space-between;padding:8px 0;border-top:1px solid var(--line);font-size:12px}
+.ep{display:flex;gap:8px;align-items:center;padding:5px 0;font-size:12px;width:100%}
+.ep .bx{width:16px;height:16px;border-radius:4px;border:1px solid var(--line);flex-shrink:0;font-size:10px;line-height:15px;text-align:center;color:var(--ink)}
+.ep.done .bx{background:var(--jade);border-color:var(--jade)}.ep.done .tt{color:var(--muted)}
+.ep.fut{opacity:.45}
+.x{width:100%;margin-top:12px;padding:12px;border-radius:10px;background:var(--raised);border:1px solid var(--line)}
+.stat{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:12px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px}
+.card .n{font:800 26px 'Bricolage Grotesque',sans-serif}
+.empty{padding:60px 16px;text-align:center;color:var(--muted);font-size:13px}
+</style>
+</head>
+<body>
+<header>
+  <div class="title-row"><h1>The Archive</h1><span class="count mono" id="count"></span></div>
+  <div class="spectrum" id="spectrum"></div>
+</header>
+<div class="bar"><input type="search" id="q" placeholder="Search everything" autocomplete="off"></div>
+<div class="tabs" id="tabs"></div>
+<div class="sortrow" id="sortrow"><span class="count mono" id="shown"></span>
+  <select id="sort">
+    <option value="smart">Most watched</option><option value="seq">Recently added</option>
+    <option value="az">Title A–Z</option><option value="za">Title Z–A</option>
+    <option value="ynew">Year, new to old</option><option value="yold">Year, old to new</option>
+  </select></div>
+<main id="main"></main>
+<footer>Read-only view of my watch history. This product uses the TMDB API but is not endorsed or certified by TMDB.</footer>
+<div class="scrim" id="scrim"><div class="sheet" id="sheet"></div></div>
+
+<script>
+const $ = (s) => document.querySelector(s);
+const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const IMG = "https://image.tmdb.org/t/p/";
+const STATUS = ["Watching", "Finished", "Backlog", "Dropped"];
+const TONE = ["var(--amber)", "var(--jade)", "var(--muted)", "var(--rose)"];
+const BAND = { anime: "var(--amber)", film: "var(--rose)", tv: "var(--jade)" };
+const hue = (t) => { let h = 0; for (const c of t) h = (h * 31 + c.charCodeAt(0)) % 360; return h; };
+const norm = (t) => (t || "").toLowerCase().replace(/[^a-z0-9]+/g, "");
+
+let LIB = [], TM = {}, EPS = null, tab = "continue", sortMode = "smart", limit = 60, query = "";
+
+const TABS = [["continue", "Continue"], ["tv", "Television"], ["anime", "Anime"], ["film", "Films"], ["fav", "Favourites"], ["backlog", "Backlog"], ["stats", "Stats"]];
+
+async function boot() {
+  try {
+    const j = (f) => fetch(`data/${f}?v=${Date.now() >> 16}`).then((r) => (r.ok ? r.json() : {}));
+    [LIB, TM] = await Promise.all([j("library.json"), j("tmdb.json")]);
+  } catch (e) { $("#main").innerHTML = `<div class="empty">Couldn't load the archive.</div>`; return; }
+  $("#tabs").innerHTML = TABS.map(([k, l]) => `<button data-t="${k}">${l}</button>`).join("");
+  $("#tabs").onclick = (e) => { const b = e.target.closest("button"); if (!b) return; tab = b.dataset.t; query = ""; $("#q").value = ""; limit = 60; render(); };
+  $("#q").oninput = (e) => { query = e.target.value; limit = 60; render(); };
+  $("#sort").onchange = (e) => { sortMode = e.target.value; limit = 60; render(); };
+  $("#scrim").onclick = (e) => { if (e.target.id === "scrim") closeSheet(); };
+  addEventListener("keydown", (e) => { if (e.key === "Escape") closeSheet(); });
+  addEventListener("hashchange", fromHash);
+  render(); fromHash();
+}
+
+function sorted(list) {
+  const a = list.slice();
+  const cmp = {
+    smart: (x, y) => (y.type === "show" ? y.w : -1) - (x.type === "show" ? x.w : -1),
+    seq: (x, y) => (y.seq || 0) - (x.seq || 0),
+    az: () => 0, za: (x, y) => y.title.localeCompare(x.title),
+    ynew: (x, y) => (+y.year || 0) - (+x.year || 0),
+    yold: (x, y) => (+x.year || 9999) - (+y.year || 9999),
+  }[sortMode];
+  return a.sort((x, y) => cmp(x, y) || x.title.localeCompare(y.title));
+}
+function visible() {
+  let l = LIB;
+  if (query.trim()) { const t = query.toLowerCase(); l = l.filter((i) => i.title.toLowerCase().includes(t) || (i.original || "").toLowerCase().includes(t)); }
+  else if (tab === "continue") l = l.filter((i) => i.s === 0);
+  else if (tab === "fav") l = l.filter((i) => i.f);
+  else if (tab === "backlog") l = l.filter((i) => i.s === 2);
+  else if (tab !== "stats") l = l.filter((i) => i.shelf === tab);
+  return sorted(l);
+}
+
+function cover(i, w = "w185") {
+  const m = TM[i.id];
+  const ph = `<div class="ph" style="background:linear-gradient(155deg,hsl(${hue(i.title)} 24% 20%),hsl(${(hue(i.title) + 40) % 360} 22% 12%))"><b style="background:${BAND[i.shelf]}"></b><span>${esc(i.title)}</span></div>`;
+  return m && m.p ? `${ph}<img loading="lazy" src="${IMG}${w}${m.p}" alt="" onerror="this.remove()">` : ph;
+}
+
+function render() {
+  $("#tabs").querySelectorAll("button").forEach((b) => b.classList.toggle("on", b.dataset.t === tab && !query));
+  $("#count").textContent = `${LIB.length} titles`;
+  const spec = LIB.filter((i) => i.type === "show" && i.w > 0).sort((a, b) => b.w - a.w);
+  $("#spectrum").innerHTML = spec.map((i) => `<i data-id="${esc(i.id)}" title="${esc(i.title)}" style="flex:${i.w};background:${BAND[i.shelf]};opacity:${i.f ? 1 : .6}"></i>`).join("");
+  $("#spectrum").onclick = (e) => { const t = e.target.closest("i"); if (t) openItem(t.dataset.id); };
+  const stats = tab === "stats" && !query;
+  $("#sortrow").style.display = stats ? "none" : "flex";
+  $("#sort").value = sortMode;
+  if (stats) { $("#main").innerHTML = statsHtml(); return; }
+  const v = visible();
+  $("#shown").textContent = `${v.length} shown`;
+  if (!v.length) { $("#main").innerHTML = `<div class="empty">${query ? "Nothing matches that." : "Nothing on this shelf yet."}</div>`; return; }
+  $("#main").innerHTML = `<div class="grid">${v.slice(0, limit).map(tile).join("")}</div>` +
+    (v.length > limit ? `<button class="more" id="more">Show more · ${v.length - limit} remaining</button>` : `<div style="height:60px"></div>`);
+  $("#main").onclick = (e) => {
+    if (e.target.closest("#more")) { limit += 60; render(); return; }
+    const t = e.target.closest(".tile"); if (t) openItem(t.dataset.id);
+  };
+}
+function tile(i) {
+  const right = i.type === "show" ? (i.w > 0 ? i.w : "") : (i.year || "");
+  return `<button class="tile" data-id="${esc(i.id)}"><div class="cover">${cover(i)}
+    ${i.f ? `<span class="badge" style="right:6px;color:var(--amber)">★</span>` : ""}
+    ${i.x > 0 ? `<span class="badge mono" style="left:6px;background:rgba(18,20,28,.75);border-radius:4px;padding:1px 4px;font-size:9px">↻${i.x}</span>` : ""}</div>
+    <div class="meta"><div class="nm">${esc(i.title)}</div><div class="sub mono"><span style="color:${TONE[i.s]}">${STATUS[i.s]}</span><span>${right}</span></div></div></button>`;
+}
+
+function statsHtml() {
+  const shows = LIB.filter((i) => i.type === "show"), films = LIB.filter((i) => i.type === "film" && i.s === 1);
+  const eps = shows.reduce((a, i) => a + i.w, 0), re = films.reduce((a, i) => a + (i.x || 0), 0);
+  const hours = Math.round((eps * 23 + (films.length + re) * 115) / 60);
+  const top = shows.slice().sort((a, b) => b.w - a.w).slice(0, 8), mx = top[0]?.w || 1;
+  return `<div class="stat">
+    <div class="card"><div class="n">${films.length}</div><div class="lbl mono">FILMS</div></div>
+    <div class="card"><div class="n">${shows.length}</div><div class="lbl mono">SHOWS</div></div>
+    <div class="card"><div class="n">${eps.toLocaleString()}</div><div class="lbl mono">EPISODES</div></div>
+    <div class="card"><div class="n">~${hours.toLocaleString()}h</div><div class="lbl mono">ESTIMATED</div></div></div>
+    <div style="padding:0 16px 100px"><div class="lbl mono" style="margin-bottom:8px">MOST WATCHED</div>
+    ${top.map((i) => `<div style="margin-bottom:8px"><div style="display:flex;justify-content:space-between;font-size:11px"><span>${esc(i.title)}</span><span class="mono" style="color:var(--muted)">${i.w}</span></div>
+      <div style="height:3px;background:var(--panel);border-radius:2px;margin-top:3px"><div style="height:100%;width:${i.w / mx * 100}%;background:${BAND[i.shelf]};border-radius:2px"></div></div></div>`).join("")}
+    <div class="lbl" style="margin-top:12px">Hours assume 23 min an episode and 115 min a film, so they are an estimate.</div></div>`;
+}
+
+async function openItem(id) {
+  const i = LIB.find((x) => x.id === id); if (!i) return;
+  history.replaceState(null, "", "#" + encodeURIComponent(id));
+  const m = TM[id] && !TM[id].nf ? TM[id] : null;
+  const imdb = m?.im ? `https://www.imdb.com/title/${m.im}/` : `https://www.imdb.com/find/?q=${encodeURIComponent(i.original || i.title)}`;
+  const lb = i.type === "film" ? (m?.t ? `https://letterboxd.com/tmdb/${m.t}` : `https://letterboxd.com/search/${encodeURIComponent(i.title)}/`) : "";
+  const info = m ? [m.y, m.rt ? m.rt + " min" : "", i.type === "show" && m.ns ? `${m.ns} season${m.ns > 1 ? "s" : ""} · ${m.ne} eps` : "", m.v ? "★ " + m.v : ""].filter(Boolean).join(" · ") : "";
+  $("#sheet").innerHTML = `
+    ${m?.bd ? `<div class="banner"><img src="${IMG}w780${m.bd}" alt=""></div>` : ""}
+    <div class="sec"><div class="head"><div class="cover">${cover(i, "w342")}</div><div style="min-width:0;flex:1">
+      <div class="h2">${esc(i.title)}</div>
+      <div class="lbl mono" style="margin-top:6px">${i.shelf === "anime" ? "ANIME" : i.shelf === "film" ? "FILM" : "TELEVISION"}${i.year ? " · " + esc(i.year) : ""}${i.last ? " · left off " + esc(i.last) : ""}${i.original ? " · " + esc(i.original) : ""}</div>
+      <div class="lbl mono" style="color:${TONE[i.s]}">${STATUS[i.s]}${i.f ? " · ★ favourite" : ""}${i.type === "show" ? " · " + i.w + " eps watched" : ""}${i.x > 0 ? " · rewatched " + i.x + "×" : ""}</div></div></div>
+      ${i.r ? `<div class="lbl mono" style="margin-top:12px">MY RATING ${i.r}/10</div><div class="rate">${[...Array(10)].map((_, k) => `<i class="${k < i.r ? "on" : ""}"></i>`).join("")}</div>` : ""}
+      ${i.n ? `<div style="margin-top:12px;font-size:12.5px;line-height:1.5">${esc(i.n)}</div>` : ""}</div>
+    <div class="sec">
+      ${m?.tg ? `<div style="font-size:12px;color:var(--amber);font-style:italic;margin-bottom:6px">${esc(m.tg)}</div>` : ""}
+      ${m?.o ? `<div style="font-size:12.5px;line-height:1.5">${esc(m.o)}</div>` : `<div class="lbl">${m ? "" : "No TMDB details yet."}</div>`}
+      <div class="lbl mono" style="margin-top:8px">${esc(info)}
+        ${m?.g?.length ? `<div>${esc(m.g.join(" · "))}</div>` : ""}
+        ${m?.dr?.length ? `<div>${i.type === "show" ? "Created by" : "Directed by"} ${esc(m.dr.join(", "))}</div>` : ""}
+        ${m?.c?.length ? `<div>With ${esc(m.c.slice(0, 8).join(", "))}</div>` : ""}
+        ${m?.wp?.length ? `<div style="color:var(--jade)">Streaming (IN): ${esc(m.wp.join(", "))}</div>` : ""}</div>
+      <div class="chips">
+        ${m?.tr ? `<a class="chip hot" target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=${esc(m.tr)}">▶ Trailer</a>` : ""}
+        <a class="chip" target="_blank" rel="noopener" href="${imdb}">IMDb ↗</a>
+        ${m?.t ? `<a class="chip" target="_blank" rel="noopener" href="https://www.themoviedb.org/${m.k}/${m.t}">TMDB ↗</a>` : ""}
+        ${lb ? `<a class="chip" target="_blank" rel="noopener" href="${lb}">Letterboxd ↗</a>` : ""}</div></div>
+    ${m?.rv?.length ? `<div class="sec"><div class="lbl mono" style="margin-bottom:6px">REVIEWS (TMDB)</div>${m.rv.slice(0, 2).map((r) => `<div class="review">${esc(r.t)}${r.t.length >= 500 ? "…" : ""}<div class="lbl mono" style="margin-top:4px">${esc(r.a)}${r.r ? " · " + r.r + "/10" : ""}</div></div>`).join("")}</div>` : ""}
+    ${m?.rc?.length ? `<div class="sec"><div class="lbl mono" style="margin-bottom:6px">MORE LIKE THIS</div><div class="recs">${m.rc.map((r) => {
+      const hit = LIB.find((x) => x.type === (r.k === "movie" ? "film" : "show") && (norm(x.title) === norm(r.n) || norm(x.original) === norm(r.n)));
+      return `<button class="rec ${hit ? "in" : ""}" ${hit ? `data-open="${esc(hit.id)}"` : "disabled"}><div class="cover">${r.p ? `<img loading="lazy" src="${IMG}w185${r.p}" alt="">` : ""}</div>
+        <div style="font-size:10px;margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(r.n)}</div>
+        <div class="mono" style="font-size:9px;color:${hit ? "var(--jade)" : "var(--muted)"}">${hit ? "in archive" : esc(r.y)}</div></button>`;
+    }).join("")}</div></div>` : ""}
+    ${i.type === "show" && m?.t ? `<div class="sec" id="epsec"><button class="x" id="epbtn" style="margin-top:0">Episodes${m.ns ? " · " + m.ns + " season" + (m.ns > 1 ? "s" : "") : ""}</button><div id="eplist"></div></div>` : ""}
+    <div class="sec" style="border:0"><button class="x" style="margin-top:0" id="done">Close</button></div>`;
+  $("#scrim").classList.add("open"); $("#sheet").scrollTop = 0; document.body.style.overflow = "hidden";
+  $("#done").onclick = closeSheet;
+  $("#sheet").querySelectorAll("[data-open]").forEach((b) => (b.onclick = () => openItem(b.dataset.open)));
+  const eb = $("#epbtn"); if (eb) eb.onclick = () => showEps(i);
+}
+async function showEps(i) {
+  const box = $("#eplist"); if (box.dataset.on) { box.innerHTML = ""; delete box.dataset.on; return; }
+  box.dataset.on = 1; box.innerHTML = `<div class="lbl mono" style="margin-top:8px">Loading…</div>`;
+  if (!EPS) EPS = await fetch("data/episodes.json").then((r) => r.json()).catch(() => ({}));
+  const d = EPS[i.id]; if (!d) { box.innerHTML = `<div class="lbl" style="margin-top:8px">No episode list yet.</div>`; return; }
+  const today = new Date().toISOString().slice(0, 10); let off = 0;
+  box.innerHTML = `<div style="margin-top:8px">` + d.seasons.map((s) => {
+    const start = off; off += s.eps.length;
+    const seen = Math.max(0, Math.min(s.eps.length, i.w - start));
+    return `<div class="season"><button data-s="${s.n}"><span>Season ${s.n}</span><span class="lbl mono" style="color:${seen === s.eps.length ? "var(--jade)" : "var(--muted)"}">${seen}/${s.eps.length} ▾</span></button><div hidden>
+      ${s.eps.map(([n, name, date], k) => { const done = start + k < i.w;
+        return `<div class="ep ${done ? "done" : ""} ${date && date > today ? "fut" : ""}"><span class="bx">${done ? "✓" : ""}</span><span class="lbl mono" style="width:22px">${n}</span><span class="tt" style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(name || "Episode " + n)}</span><span class="lbl mono">${date ? date.slice(0, 4) : ""}</span></div>`; }).join("")}</div></div>`;
+  }).join("") + `</div>`;
+  box.querySelectorAll(".season>button").forEach((b) => (b.onclick = () => { const p = b.nextElementSibling; p.hidden = !p.hidden; }));
+}
+function closeSheet() { $("#scrim").classList.remove("open"); document.body.style.overflow = ""; history.replaceState(null, "", location.pathname); }
+function fromHash() { const id = decodeURIComponent(location.hash.slice(1)); if (id) openItem(id); }
+boot();
+</script>
+</body>
+</html>
