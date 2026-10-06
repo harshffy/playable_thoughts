@@ -28,7 +28,7 @@ if (cmd === "film" || cmd === "show") {
   const it = {
     id: makeId(type === "show" ? "s:" : "m:", title), title,
     type, shelf: type === "film" ? "film" : flags.anime ? "anime" : "tv",
-    w: Number(flags.eps || 0), s: Number(flags.status ?? (type === "film" ? 1 : 0)), f: 0, r: 0, n: "", x: 0, seq: nextSeq(),
+    w: Number(flags.eps || 0), s: Number(flags.status ?? (type === "film" ? 1 : 0)), f: 0, r: 0, n: "", x: 0, seq: nextSeq(), added: new Date().toISOString(),
   };
   if (type === "film" && pos[1]) it.year = String(pos[1]);
   if (flags.alt) { it.original = title; it.title = flags.alt; }

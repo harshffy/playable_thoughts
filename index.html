@@ -139,7 +139,7 @@ function sorted(list) {
   const a = list.slice();
   const cmp = {
     smart: (x, y) => (y.type === "show" ? y.w : -1) - (x.type === "show" ? x.w : -1),
-    seq: (x, y) => (y.seq || 0) - (x.seq || 0),
+    seq: (x, y) => { const sx = x.seq || 0, sy = y.seq || 0; if (sx > 0 || sy > 0) return sy - sx; return (y.added || "").localeCompare(x.added || ""); },
     az: () => 0, za: (x, y) => y.title.localeCompare(x.title),
     ynew: (x, y) => (+y.year || 0) - (+x.year || 0),
     yold: (x, y) => (+x.year || 9999) - (+y.year || 9999),
