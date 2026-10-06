@@ -29,7 +29,7 @@ async function detail(kind, id) {
   const vids = (d.videos?.results || []).filter((x) => x.site === "YouTube");
   const tr = vids.find((x) => x.type === "Trailer" && x.official) || vids.find((x) => x.type === "Trailer") || vids.find((x) => x.type === "Teaser");
   return {
-    t: d.id, k: kind, p: d.poster_path || "", bd: d.backdrop_path || "",
+    t: d.id, k: kind, nm: d.title || d.name || "", p: d.poster_path || "", bd: d.backdrop_path || "",
     o: d.overview || "", tg: d.tagline || "",
     y: yr(kind === "movie" ? d.release_date : d.first_air_date),
     rt: kind === "movie" ? d.runtime || 0 : d.episode_run_time?.[0] || 0,
@@ -47,15 +47,49 @@ async function detail(kind, id) {
     st: d.status || "", u: now,
   };
 }
+const RV = 2; // bump to retry previously unmatched titles with improved matching
+function nameVariants(raw) {
+  const out = [];
+  const add = (x) => { x = (x || "").replace(/\s+/g, " ").trim(); if (x.length > 1 && !out.includes(x)) out.push(x); };
+  const ym = raw.match(/\((\d{4})\)\s*$/);
+  const base = raw.replace(/\s*\(\d{4}\)\s*$/, "").trim();
+  add(base);
+  add(base.replace(/^the\s+/i, ""));
+  add(base.replace(/,?\s*part\s*\d+\s*$/i, ""));
+  const head = base.split(/\s*[:\-–—]\s*/)[0];
+  if (head && head.length > 3) add(head);
+  return { names: out, year: ym ? ym[1] : "" };
+}
 async function resolve(item) {
-  const kind = item.type === "film" ? "movie" : "tv";
-  const names = [...new Set([item.original, item.title].filter(Boolean))];
-  const years = kind === "movie" && item.year ? [String(item.year), ""] : [""];
-  for (const y of years) for (const n of names) {
-    const p = { query: n, include_adult: "false" };
-    if (y) p.year = y;
-    const r = await get(`/search/${kind}`, p);
-    if (r.results?.length) return detail(kind, r.results[0].id);
+  if (item.tvdb) {
+    const f = await get(`/find/${item.tvdb}`, { external_source: "tvdb_id" });
+    const hit = f.tv_results?.[0];
+    if (hit) return detail("tv", hit.id);
+  }
+  const isFilm = item.type === "film";
+  const raws = [...new Set([item.original, item.title].filter((x) => x && !x.startsWith("(unidentified")))];
+  const kinds = isFilm ? ["movie"] : ["tv", "movie"]; // some "shows" in TV Time are really films/OVAs
+  for (const kind of kinds) {
+    for (const raw of raws) {
+      const { names, year } = nameVariants(raw);
+      const y = isFilm && item.year ? String(item.year) : year;
+      for (const n of names) {
+        const tries = y ? [y, ""] : [""];
+        for (const yy of tries) {
+          const p = { query: n, include_adult: "false" };
+          if (yy) p[kind === "movie" ? "year" : "first_air_date_year"] = yy;
+          const r = await get(`/search/${kind}`, p);
+          if (r.results?.length) return detail(kind, r.results[0].id);
+        }
+      }
+    }
+  }
+  // last resort: multi search on the cleanest name
+  for (const raw of raws) {
+    const { names } = nameVariants(raw);
+    const r = await get("/search/multi", { query: names[0], include_adult: "false" });
+    const hit = (r.results || []).find((x) => x.media_type === "movie" || x.media_type === "tv");
+    if (hit) return detail(hit.media_type, hit.id);
   }
   return null;
 }
@@ -78,7 +112,7 @@ const jobs = lib.filter((it) => {
   const m = meta[it.id], o = over[it.id];
   if (FORCE || !m) return true;
   if (o && (m.t !== o.t || m.k !== o.k)) return true;
-  if (m.nf) return now - (m.u || 0) > 30 * DAY;        // retry misses monthly
+  if (m.nf) return (m.rv || 0) < RV || now - (m.u || 0) > 30 * DAY; // retry misses when matching improves, or monthly
   if ((m.dp || 0) < 3 && !m.u) return true;
   return live(m) && now - (m.u || 0) > 6 * DAY;         // airing shows refresh weekly
 });
@@ -91,7 +125,7 @@ async function worker() {
     try {
       const o = over[it.id];
       const m = o ? await detail(o.k, o.t) : await resolve(it);
-      meta[it.id] = m || { nf: 1, u: now };
+      meta[it.id] = m ? { ...m, rv: RV } : { nf: 1, u: now, rv: RV };
     } catch (e) { fail++; console.error("fail", it.title, e.message); }
     if (++done % 50 === 0) console.log(`  ${done}/${jobs.length}`);
   }

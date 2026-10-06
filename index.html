@@ -114,6 +114,7 @@ const TONE = ["var(--amber)", "var(--jade)", "var(--muted)", "var(--rose)"];
 const BAND = { anime: "var(--fg)", film: "var(--rose)", tv: "var(--jade)" };
 const hue = (t) => { let h = 0; for (const c of t) h = (h * 31 + c.charCodeAt(0)) % 360; return h; };
 const clean = (t) => String(t || "").replace(/<[^>]+>/g, "").replace(/[*_]{1,3}/g, "").replace(/\s+/g, " ").trim();
+const shown = (i) => (i.tvdb && TM[i.id] && TM[i.id].nm) || i.title;
 const norm = (t) => (t || "").toLowerCase().replace(/[^a-z0-9]+/g, "");
 
 let LIB = [], TM = {}, EPS = null, tab = "continue", sortMode = "smart", limit = 60, query = "";
@@ -159,7 +160,7 @@ function visible() {
 function cover(i, w = "w185") {
   const m = TM[i.id];
   const h = hue(i.title), ang = [200, 160, 20, 340][h % 4], dd = 6 + (h % 4);
-  const ph = `<div class="ph" style="--a:${ang}deg;--d:${dd}px"><span>${esc(i.title)}</span></div>`;
+  const ph = `<div class="ph" style="--a:${ang}deg;--d:${dd}px"><span>${esc(shown(i))}</span></div>`;
   return m && m.p ? `${ph}<img loading="lazy" src="${IMG}${w}${m.p}" alt="" onerror="this.remove()">` : ph;
 }
 
@@ -190,7 +191,7 @@ function tile(i) {
   return `<button class="tile" data-id="${esc(i.id)}"><div class="cover">${cover(i)}
     ${i.f ? `<span class="badge" style="right:6px">★</span>` : ""}
     ${i.x > 0 ? `<span class="badge mono" style="left:6px;font-size:9px">↻${i.x}</span>` : ""}</div>
-    <div class="meta"><div class="nm">${esc(i.title)}</div><div class="sub mono"><span style="color:${i.s === 0 ? "var(--fg)" : "var(--muted)"};font-weight:${i.s === 0 ? 600 : 400}">${i.s === 0 ? "● " : ""}${STATUS[i.s]}</span><span>${right}</span></div></div></button>`;
+    <div class="meta"><div class="nm">${esc(shown(i))}</div><div class="sub mono"><span style="color:${i.s === 0 ? "var(--fg)" : "var(--muted)"};font-weight:${i.s === 0 ? 600 : 400}">${i.s === 0 ? "● " : ""}${STATUS[i.s]}</span><span>${right}</span></div></div></button>`;
 }
 
 function statsHtml() {
@@ -219,7 +220,7 @@ async function openItem(id) {
   $("#sheet").innerHTML = `
     ${m?.bd ? `<div class="banner"><img src="${IMG}w780${m.bd}" alt=""></div>` : ""}
     <div class="sec"><div class="head"><div class="cover">${cover(i, "w342")}</div><div style="min-width:0;flex:1">
-      <div class="h2">${esc(i.title)}</div>
+      <div class="h2">${esc(shown(i))}</div>
       <div class="lbl mono" style="margin-top:6px">${i.shelf === "anime" ? "ANIME" : i.shelf === "film" ? "FILM" : "TELEVISION"}${i.year ? " · " + esc(i.year) : ""}${i.last ? " · left off " + esc(i.last) : ""}${i.original ? " · " + esc(i.original) : ""}</div>
       <div class="lbl mono" style="color:var(--fg)">${STATUS[i.s]}${i.f ? " · ★ favourite" : ""}${i.type === "show" ? " · " + i.w + " eps watched" : ""}${i.x > 0 ? " · rewatched " + i.x + "×" : ""}</div></div></div>
       ${i.r ? `<div class="lbl mono" style="margin-top:12px">MY RATING ${i.r}/10</div><div class="rate">${[...Array(10)].map((_, k) => `<i class="${k < i.r ? "on" : ""}"></i>`).join("")}</div>` : ""}

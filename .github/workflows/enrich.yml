@@ -3,7 +3,7 @@ name: Enrich from TMDB
 on:
   push:
     branches: [main]
-    paths: ["data/library.json", "data/overrides.json"]
+    paths: ["data/library.json", "data/overrides.json", "scripts/enrich.mjs"]
   schedule:
     - cron: "17 3 * * 1"      # weekly refresh of airing shows
   workflow_dispatch:
