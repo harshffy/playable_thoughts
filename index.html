@@ -3,86 +3,95 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>The Archive · Playable Thoughts</title>
+<title>Playable Thoughts · The Archive</title>
 <meta name="description" content="Everything I've watched: films, shows and anime.">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2312141C'/%3E%3Crect x='6' y='9' width='20' height='3' rx='1.5' fill='%23EFA65C'/%3E%3Crect x='6' y='15' width='14' height='3' rx='1.5' fill='%2357A98D'/%3E%3Crect x='6' y='21' width='17' height='3' rx='1.5' fill='%23D3766B'/%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23fff'/%3E%3Ccircle cx='9' cy='16' r='3' fill='%23000'/%3E%3Ccircle cx='16.5' cy='16' r='4.5' fill='%23000'/%3E%3Ccircle cx='25' cy='16' r='6' fill='%23000'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Archivo:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-:root{--ink:#12141C;--panel:#191D28;--raised:#202634;--line:#2C3341;--cream:#E9E4D8;--muted:#7E8798;--amber:#EFA65C;--jade:#57A98D;--rose:#D3766B}
+:root{--bg:#fff;--fg:#0a0a0a;--panel:#f5f5f5;--raised:#ececec;--line:#dcdcdc;--muted:#6b6b6b;--amber:#0a0a0a;--jade:#4a4a4a;--rose:#8a8a8a}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html,body{margin:0;background:var(--ink);color:var(--cream);font-family:Archivo,system-ui,sans-serif}
+html,body{margin:0;background:var(--bg);color:var(--fg);font-family:Barlow,system-ui,sans-serif}
 button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer}
 a{color:inherit}
 .mono{font-family:'JetBrains Mono',monospace}
-header{padding:20px 16px 12px;border-bottom:1px solid var(--line)}
-.title-row{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:12px}
-h1{margin:0;font:800 26px 'Bricolage Grotesque',sans-serif;letter-spacing:-.04em}
+.cond{font-family:'Barlow Condensed',sans-serif;text-transform:uppercase;letter-spacing:.04em}
+header{padding:22px 16px 14px;border-bottom:2px solid var(--fg)}
+.logo{display:block;width:min(100%,340px);height:auto;margin:0 0 14px -4px}
+.title-row{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px}
+h1{margin:0;font:700 22px 'Barlow Condensed',sans-serif;letter-spacing:.08em;text-transform:uppercase}
 .count{font-size:10px;color:var(--muted)}
-.spectrum{display:flex;height:14px;gap:1px;border-radius:4px;overflow:hidden}
-.spectrum i{display:block;min-width:2px;cursor:pointer}
+.dots{display:flex;align-items:center;gap:3px;height:34px;overflow:hidden}
+.dots i{display:block;flex-shrink:0;border-radius:50%;background:var(--fg);cursor:pointer}
+.dots i.nf{opacity:.35}
 .bar{padding:12px 16px;border-bottom:1px solid var(--line)}
-input[type=search]{width:100%;background:var(--panel);color:var(--cream);border:1px solid var(--line);border-radius:10px;padding:9px 12px;font-size:14px}
-.tabs{display:flex;gap:4px;padding:8px 12px;overflow-x:auto;border-bottom:1px solid var(--line)}
-.tabs button{padding:6px 12px;border-radius:99px;border:1px solid var(--line);color:var(--muted);font-size:12px;white-space:nowrap}
-.tabs button.on{background:var(--cream);color:var(--ink);border-color:var(--cream)}
+input[type=search]{width:100%;background:var(--bg);color:var(--fg);border:1px solid var(--fg);border-radius:0;padding:9px 12px;font:500 15px Barlow,sans-serif}
+input[type=search]:focus{outline:none;box-shadow:3px 3px 0 var(--fg)}
+.tabs{display:flex;gap:2px;padding:8px 12px;overflow-x:auto;border-bottom:1px solid var(--line)}
+.tabs button{padding:6px 12px;border:1px solid transparent;color:var(--muted);font:600 14px 'Barlow Condensed',sans-serif;text-transform:uppercase;letter-spacing:.06em;white-space:nowrap}
+.tabs button.on{background:var(--fg);color:var(--bg)}
 .sortrow{display:flex;justify-content:space-between;align-items:center;padding:8px 16px}
-select{background:var(--panel);color:var(--cream);border:1px solid var(--line);border-radius:8px;padding:4px 8px;font-size:11px}
-.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:12px}
+select{background:var(--bg);color:var(--fg);border:1px solid var(--fg);border-radius:0;padding:4px 8px;font:500 12px Barlow,sans-serif}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:12px}
 @media(min-width:640px){.grid{grid-template-columns:repeat(5,1fr)}}
 @media(min-width:1000px){.grid{grid-template-columns:repeat(8,1fr)}}
-.tile{text-align:left;background:var(--panel);border:1px solid var(--line);border-radius:8px;overflow:hidden;display:block;width:100%}
-.tile:focus-visible{outline:2px solid var(--amber)}
-.cover{aspect-ratio:2/3;position:relative;background:var(--raised);overflow:hidden}
+.tile{text-align:left;background:var(--bg);border:1px solid var(--line);overflow:hidden;display:block;width:100%;transition:border-color .12s,box-shadow .12s}
+.tile:hover,.tile:focus-visible{border-color:var(--fg);box-shadow:3px 3px 0 var(--fg);outline:none}
+.cover{aspect-ratio:2/3;position:relative;background:var(--panel);overflow:hidden}
 .cover img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
-.ph{position:absolute;inset:0;padding:10px;display:flex;flex-direction:column;justify-content:space-between}
-.ph b{display:block;height:3px;width:38%;border-radius:2px}
-.ph span{font:700 13px/1.12 'Bricolage Grotesque',sans-serif;letter-spacing:-.02em;display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden}
-.badge{position:absolute;top:6px;font-size:10px}
+.ph{position:absolute;inset:0;padding:10px;display:flex;flex-direction:column;justify-content:flex-end;background:#fff}
+.ph:before{content:"";position:absolute;inset:0;background:radial-gradient(circle,#0a0a0a 34%,transparent 37%) 0 0/var(--d,8px) var(--d,8px);-webkit-mask-image:linear-gradient(var(--a,200deg),#000 0%,rgba(0,0,0,.5) 35%,transparent 70%);mask-image:linear-gradient(var(--a,200deg),#000 0%,rgba(0,0,0,.5) 35%,transparent 70%)}
+.ph span{position:relative;font:700 15px/1.02 'Barlow Condensed',sans-serif;text-transform:uppercase;letter-spacing:.02em;display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden}
+.badge{position:absolute;top:6px;font-size:10px;background:rgba(255,255,255,.92);color:var(--fg);border-radius:99px;min-width:16px;height:16px;line-height:16px;text-align:center;padding:0 4px}
 .tile .meta{padding:6px 8px 8px}
-.tile .nm{font-size:11px;line-height:1.25;height:28px;overflow:hidden}
+.tile .nm{font:600 13px/1.15 'Barlow Condensed',sans-serif;text-transform:uppercase;letter-spacing:.02em;height:30px;overflow:hidden}
 .tile .sub{display:flex;justify-content:space-between;margin-top:4px;font-size:9px;color:var(--muted)}
-.more{display:block;margin:8px 12px 110px;width:calc(100% - 24px);padding:12px;border-radius:10px;background:var(--panel);border:1px solid var(--line);font-size:13px}
+.more{display:block;margin:8px 12px 110px;width:calc(100% - 24px);padding:12px;background:var(--bg);border:1px solid var(--fg);font:600 14px 'Barlow Condensed',sans-serif;text-transform:uppercase;letter-spacing:.08em}
+.more:hover{background:var(--fg);color:var(--bg)}
 footer{padding:0 16px 40px;font-size:10px;color:var(--muted);line-height:1.6}
-.scrim{position:fixed;inset:0;background:rgba(6,8,12,.72);z-index:50;display:none;align-items:flex-end;justify-content:center}
+.scrim{position:fixed;inset:0;background:rgba(255,255,255,.78);-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px);z-index:50;display:none;align-items:flex-end;justify-content:center}
 .scrim.open{display:flex}
 @media(min-width:640px){.scrim{align-items:center}}
-.sheet{width:100%;max-width:520px;max-height:90vh;overflow-y:auto;background:var(--panel);border:1px solid var(--line);border-radius:16px 16px 0 0}
-@media(min-width:640px){.sheet{border-radius:16px}}
-.banner{height:120px;position:relative;overflow:hidden}
-.banner img{width:100%;height:100%;object-fit:cover;opacity:.55}
-.banner:after{content:"";position:absolute;inset:0;background:linear-gradient(to bottom,transparent 40%,var(--panel))}
+.sheet{width:100%;max-width:520px;max-height:90vh;overflow-y:auto;background:var(--bg);border:2px solid var(--fg)}
+@media(min-width:640px){.sheet{box-shadow:6px 6px 0 var(--fg)}}
+.banner{height:120px;position:relative;overflow:hidden;background:var(--panel)}
+.banner img{width:100%;height:100%;object-fit:cover;filter:grayscale(1) contrast(1.15);opacity:.6}
+.banner:after{content:"";position:absolute;inset:0;background:linear-gradient(to bottom,transparent 35%,var(--bg))}
 .sec{padding:16px;border-bottom:1px solid var(--line)}
 .head{display:flex;gap:12px}
-.head .cover{width:76px;flex-shrink:0;border-radius:6px}
-.h2{font:700 18px/1.15 'Bricolage Grotesque',sans-serif;letter-spacing:-.02em}
+.head .cover{width:76px;flex-shrink:0;border:1px solid var(--line)}
+.h2{font:700 26px/1 'Barlow Condensed',sans-serif;letter-spacing:.02em;text-transform:uppercase}
 .lbl{font-size:10px;color:var(--muted);line-height:1.7}
 .chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
-.chip{font-size:11px;border:1px solid var(--line);background:var(--raised);border-radius:6px;padding:4px 8px;text-decoration:none;display:inline-block}
-.chip.hot{background:var(--amber);border-color:var(--amber);color:var(--ink)}
-.rate{display:flex;gap:4px;margin-top:6px}.rate i{flex:1;height:22px;border-radius:4px;background:var(--raised);border:1px solid var(--line)}
-.rate i.on{background:var(--jade)}
+.chip{font:600 13px 'Barlow Condensed',sans-serif;text-transform:uppercase;letter-spacing:.06em;border:1px solid var(--fg);background:var(--bg);padding:4px 10px;text-decoration:none;display:inline-block}
+.chip:hover{background:var(--fg);color:var(--bg)}
+.chip.hot{background:var(--fg);color:var(--bg)}
+.chip.hot:hover{background:var(--bg);color:var(--fg)}
+.rate{display:flex;gap:5px;margin-top:6px}.rate i{flex:1;aspect-ratio:1;max-width:26px;border-radius:50%;border:1px solid var(--fg)}
+.rate i.on{background:var(--fg)}
 .recs{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px}
 .rec{width:72px;flex-shrink:0;text-align:left}
-.rec .cover{border-radius:6px;border:1px solid var(--line)}
-.rec.in .cover{border-color:var(--jade)}
-.review{background:var(--ink);border:1px solid var(--line);border-radius:8px;padding:8px;margin-bottom:8px;font-size:12px;line-height:1.45}
-.season>button{width:100%;display:flex;justify-content:space-between;padding:8px 0;border-top:1px solid var(--line);font-size:12px}
-.ep{display:flex;gap:8px;align-items:center;padding:5px 0;font-size:12px;width:100%}
-.ep .bx{width:16px;height:16px;border-radius:4px;border:1px solid var(--line);flex-shrink:0;font-size:10px;line-height:15px;text-align:center;color:var(--ink)}
-.ep.done .bx{background:var(--jade);border-color:var(--jade)}.ep.done .tt{color:var(--muted)}
-.ep.fut{opacity:.45}
-.x{width:100%;margin-top:12px;padding:12px;border-radius:10px;background:var(--raised);border:1px solid var(--line)}
-.stat{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:12px}
-.card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px}
-.card .n{font:800 26px 'Bricolage Grotesque',sans-serif}
-.empty{padding:60px 16px;text-align:center;color:var(--muted);font-size:13px}
+.rec .cover{border:1px solid var(--line)}
+.rec.in .cover{border:2px solid var(--fg)}
+.review{background:var(--panel);border-left:3px solid var(--fg);padding:8px 10px;margin-bottom:8px;font-size:13px;line-height:1.45}
+.season>button{width:100%;display:flex;justify-content:space-between;padding:8px 0;border-top:1px solid var(--line);font:600 14px 'Barlow Condensed',sans-serif;text-transform:uppercase;letter-spacing:.06em}
+.ep{display:flex;gap:8px;align-items:center;padding:5px 0;font-size:13px;width:100%}
+.ep .bx{width:14px;height:14px;border-radius:50%;border:1px solid var(--fg);flex-shrink:0;font-size:0}
+.ep.done .bx{background:var(--fg)}.ep.done .tt{color:var(--muted)}
+.ep.fut{opacity:.4}
+.x{width:100%;margin-top:12px;padding:12px;background:var(--bg);border:1px solid var(--fg);font:600 14px 'Barlow Condensed',sans-serif;text-transform:uppercase;letter-spacing:.08em}
+.x:hover{background:var(--fg);color:var(--bg)}
+.stat{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:12px}
+.card{background:var(--bg);border:1px solid var(--fg);padding:12px}
+.card .n{font:700 40px/1 'Barlow Condensed',sans-serif}
+.empty{padding:60px 16px;text-align:center;color:var(--muted);font-size:14px}
 </style>
 </head>
 <body>
 <header>
+  <img class="logo" src="assets/logo.png" alt="Playable Thoughts: turning thoughts into reality">
   <div class="title-row"><h1>The Archive</h1><span class="count mono" id="count"></span></div>
-  <div class="spectrum" id="spectrum"></div>
+  <div class="dots" id="spectrum"></div>
 </header>
 <div class="bar"><input type="search" id="q" placeholder="Search everything" autocomplete="off"></div>
 <div class="tabs" id="tabs"></div>
@@ -102,8 +111,9 @@ const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "
 const IMG = "https://image.tmdb.org/t/p/";
 const STATUS = ["Watching", "Finished", "Backlog", "Dropped"];
 const TONE = ["var(--amber)", "var(--jade)", "var(--muted)", "var(--rose)"];
-const BAND = { anime: "var(--amber)", film: "var(--rose)", tv: "var(--jade)" };
+const BAND = { anime: "var(--fg)", film: "var(--rose)", tv: "var(--jade)" };
 const hue = (t) => { let h = 0; for (const c of t) h = (h * 31 + c.charCodeAt(0)) % 360; return h; };
+const clean = (t) => String(t || "").replace(/<[^>]+>/g, "").replace(/[*_]{1,3}/g, "").replace(/\s+/g, " ").trim();
 const norm = (t) => (t || "").toLowerCase().replace(/[^a-z0-9]+/g, "");
 
 let LIB = [], TM = {}, EPS = null, tab = "continue", sortMode = "smart", limit = 60, query = "";
@@ -148,15 +158,18 @@ function visible() {
 
 function cover(i, w = "w185") {
   const m = TM[i.id];
-  const ph = `<div class="ph" style="background:linear-gradient(155deg,hsl(${hue(i.title)} 24% 20%),hsl(${(hue(i.title) + 40) % 360} 22% 12%))"><b style="background:${BAND[i.shelf]}"></b><span>${esc(i.title)}</span></div>`;
+  const h = hue(i.title), ang = [200, 160, 20, 340][h % 4], dd = 6 + (h % 4);
+  const ph = `<div class="ph" style="--a:${ang}deg;--d:${dd}px"><span>${esc(i.title)}</span></div>`;
   return m && m.p ? `${ph}<img loading="lazy" src="${IMG}${w}${m.p}" alt="" onerror="this.remove()">` : ph;
 }
 
 function render() {
   $("#tabs").querySelectorAll("button").forEach((b) => b.classList.toggle("on", b.dataset.t === tab && !query));
   $("#count").textContent = `${LIB.length} titles`;
-  const spec = LIB.filter((i) => i.type === "show" && i.w > 0).sort((a, b) => b.w - a.w);
-  $("#spectrum").innerHTML = spec.map((i) => `<i data-id="${esc(i.id)}" title="${esc(i.title)}" style="flex:${i.w};background:${BAND[i.shelf]};opacity:${i.f ? 1 : .6}"></i>`).join("");
+  const spec = LIB.filter((i) => i.type === "show" && i.w > 0).sort((a, b) => b.w - a.w).slice(0, 60);
+  const mxw = spec[0]?.w || 1;
+  $("#spectrum").innerHTML = spec.map((i) => { const d = Math.round(4 + 28 * Math.sqrt(i.w / mxw));
+    return `<i data-id="${esc(i.id)}" title="${esc(i.title)} · ${i.w} eps" style="width:${d}px;height:${d}px"></i>`; }).join("");
   $("#spectrum").onclick = (e) => { const t = e.target.closest("i"); if (t) openItem(t.dataset.id); };
   const stats = tab === "stats" && !query;
   $("#sortrow").style.display = stats ? "none" : "flex";
@@ -175,9 +188,9 @@ function render() {
 function tile(i) {
   const right = i.type === "show" ? (i.w > 0 ? i.w : "") : (i.year || "");
   return `<button class="tile" data-id="${esc(i.id)}"><div class="cover">${cover(i)}
-    ${i.f ? `<span class="badge" style="right:6px;color:var(--amber)">★</span>` : ""}
-    ${i.x > 0 ? `<span class="badge mono" style="left:6px;background:rgba(18,20,28,.75);border-radius:4px;padding:1px 4px;font-size:9px">↻${i.x}</span>` : ""}</div>
-    <div class="meta"><div class="nm">${esc(i.title)}</div><div class="sub mono"><span style="color:${TONE[i.s]}">${STATUS[i.s]}</span><span>${right}</span></div></div></button>`;
+    ${i.f ? `<span class="badge" style="right:6px">★</span>` : ""}
+    ${i.x > 0 ? `<span class="badge mono" style="left:6px;font-size:9px">↻${i.x}</span>` : ""}</div>
+    <div class="meta"><div class="nm">${esc(i.title)}</div><div class="sub mono"><span style="color:${i.s === 0 ? "var(--fg)" : "var(--muted)"};font-weight:${i.s === 0 ? 600 : 400}">${i.s === 0 ? "● " : ""}${STATUS[i.s]}</span><span>${right}</span></div></div></button>`;
 }
 
 function statsHtml() {
@@ -192,7 +205,7 @@ function statsHtml() {
     <div class="card"><div class="n">~${hours.toLocaleString()}h</div><div class="lbl mono">ESTIMATED</div></div></div>
     <div style="padding:0 16px 100px"><div class="lbl mono" style="margin-bottom:8px">MOST WATCHED</div>
     ${top.map((i) => `<div style="margin-bottom:8px"><div style="display:flex;justify-content:space-between;font-size:11px"><span>${esc(i.title)}</span><span class="mono" style="color:var(--muted)">${i.w}</span></div>
-      <div style="height:3px;background:var(--panel);border-radius:2px;margin-top:3px"><div style="height:100%;width:${i.w / mx * 100}%;background:${BAND[i.shelf]};border-radius:2px"></div></div></div>`).join("")}
+      <div style="height:3px;background:var(--panel);margin-top:3px"><div style="height:100%;width:${i.w / mx * 100}%;background:var(--fg)"></div></div></div>`).join("")}
     <div class="lbl" style="margin-top:12px">Hours assume 23 min an episode and 115 min a film, so they are an estimate.</div></div>`;
 }
 
@@ -208,23 +221,23 @@ async function openItem(id) {
     <div class="sec"><div class="head"><div class="cover">${cover(i, "w342")}</div><div style="min-width:0;flex:1">
       <div class="h2">${esc(i.title)}</div>
       <div class="lbl mono" style="margin-top:6px">${i.shelf === "anime" ? "ANIME" : i.shelf === "film" ? "FILM" : "TELEVISION"}${i.year ? " · " + esc(i.year) : ""}${i.last ? " · left off " + esc(i.last) : ""}${i.original ? " · " + esc(i.original) : ""}</div>
-      <div class="lbl mono" style="color:${TONE[i.s]}">${STATUS[i.s]}${i.f ? " · ★ favourite" : ""}${i.type === "show" ? " · " + i.w + " eps watched" : ""}${i.x > 0 ? " · rewatched " + i.x + "×" : ""}</div></div></div>
+      <div class="lbl mono" style="color:var(--fg)">${STATUS[i.s]}${i.f ? " · ★ favourite" : ""}${i.type === "show" ? " · " + i.w + " eps watched" : ""}${i.x > 0 ? " · rewatched " + i.x + "×" : ""}</div></div></div>
       ${i.r ? `<div class="lbl mono" style="margin-top:12px">MY RATING ${i.r}/10</div><div class="rate">${[...Array(10)].map((_, k) => `<i class="${k < i.r ? "on" : ""}"></i>`).join("")}</div>` : ""}
-      ${i.n ? `<div style="margin-top:12px;font-size:12.5px;line-height:1.5">${esc(i.n)}</div>` : ""}</div>
+      ${i.n ? `<div style="margin-top:12px;font-size:14px;line-height:1.5">${esc(i.n)}</div>` : ""}</div>
     <div class="sec">
-      ${m?.tg ? `<div style="font-size:12px;color:var(--amber);font-style:italic;margin-bottom:6px">${esc(m.tg)}</div>` : ""}
-      ${m?.o ? `<div style="font-size:12.5px;line-height:1.5">${esc(m.o)}</div>` : `<div class="lbl">${m ? "" : "No TMDB details yet."}</div>`}
+      ${m?.tg ? `<div style="font-size:14px;font-style:italic;margin-bottom:6px">${esc(m.tg)}</div>` : ""}
+      ${m?.o ? `<div style="font-size:14px;line-height:1.5">${esc(m.o)}</div>` : `<div class="lbl">${m ? "" : "No TMDB details yet."}</div>`}
       <div class="lbl mono" style="margin-top:8px">${esc(info)}
         ${m?.g?.length ? `<div>${esc(m.g.join(" · "))}</div>` : ""}
         ${m?.dr?.length ? `<div>${i.type === "show" ? "Created by" : "Directed by"} ${esc(m.dr.join(", "))}</div>` : ""}
         ${m?.c?.length ? `<div>With ${esc(m.c.slice(0, 8).join(", "))}</div>` : ""}
-        ${m?.wp?.length ? `<div style="color:var(--jade)">Streaming (IN): ${esc(m.wp.join(", "))}</div>` : ""}</div>
+        ${m?.wp?.length ? `<div style="color:var(--fg)">Streaming (IN): ${esc(m.wp.join(", "))}</div>` : ""}</div>
       <div class="chips">
         ${m?.tr ? `<a class="chip hot" target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=${esc(m.tr)}">▶ Trailer</a>` : ""}
         <a class="chip" target="_blank" rel="noopener" href="${imdb}">IMDb ↗</a>
         ${m?.t ? `<a class="chip" target="_blank" rel="noopener" href="https://www.themoviedb.org/${m.k}/${m.t}">TMDB ↗</a>` : ""}
         ${lb ? `<a class="chip" target="_blank" rel="noopener" href="${lb}">Letterboxd ↗</a>` : ""}</div></div>
-    ${m?.rv?.length ? `<div class="sec"><div class="lbl mono" style="margin-bottom:6px">REVIEWS (TMDB)</div>${m.rv.slice(0, 2).map((r) => `<div class="review">${esc(r.t)}${r.t.length >= 500 ? "…" : ""}<div class="lbl mono" style="margin-top:4px">${esc(r.a)}${r.r ? " · " + r.r + "/10" : ""}</div></div>`).join("")}</div>` : ""}
+    ${m?.rv?.length ? `<div class="sec"><div class="lbl mono" style="margin-bottom:6px">REVIEWS (TMDB)</div>${m.rv.slice(0, 2).map((r) => `<div class="review">${esc(clean(r.t))}${r.t.length >= 500 ? "…" : ""}<div class="lbl mono" style="margin-top:4px">${esc(r.a)}${r.r ? " · " + r.r + "/10" : ""}</div></div>`).join("")}</div>` : ""}
     ${m?.rc?.length ? `<div class="sec"><div class="lbl mono" style="margin-bottom:6px">MORE LIKE THIS</div><div class="recs">${m.rc.map((r) => {
       const hit = LIB.find((x) => x.type === (r.k === "movie" ? "film" : "show") && (norm(x.title) === norm(r.n) || norm(x.original) === norm(r.n)));
       return `<button class="rec ${hit ? "in" : ""}" ${hit ? `data-open="${esc(hit.id)}"` : "disabled"}><div class="cover">${r.p ? `<img loading="lazy" src="${IMG}w185${r.p}" alt="">` : ""}</div>
