@@ -85,6 +85,19 @@ footer{padding:0 16px 40px;font-size:10px;color:var(--muted);line-height:1.6}
 .card{background:var(--bg);border:1px solid var(--fg);padding:12px}
 .card .n{font:700 40px/1 'Barlow Condensed',sans-serif}
 .empty{padding:60px 16px;text-align:center;color:var(--muted);font-size:14px}
+
+.sections{display:flex;gap:0;border-bottom:1px solid var(--fg)}
+.sections button{flex:1;background:var(--bg);color:var(--fg);border:0;border-right:1px solid var(--fg);padding:11px 8px;font:700 15px 'Barlow Condensed',sans-serif;letter-spacing:.1em;text-transform:uppercase;cursor:pointer}
+.sections button:last-child{border-right:0}
+.sections button.on{background:var(--fg);color:var(--bg)}
+.media{padding:16px;display:grid;gap:16px;max-width:1100px;margin:0 auto}
+.media .frame{position:relative;border:1px solid var(--fg);background:var(--bg);box-shadow:4px 4px 0 var(--fg)}
+.media .yt{aspect-ratio:16/9}
+.media iframe{display:block;width:100%;height:100%;border:0}
+.reels{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:20px}
+.reels .frame{height:560px}
+.cta{display:inline-block;justify-self:start;border:1px solid var(--fg);padding:9px 14px;color:var(--fg);text-decoration:none;font:700 13px 'Barlow Condensed',sans-serif;letter-spacing:.1em;text-transform:uppercase}
+.cta:hover{background:var(--fg);color:var(--bg)}
 </style>
 </head>
 <body>
@@ -93,7 +106,8 @@ footer{padding:0 16px 40px;font-size:10px;color:var(--muted);line-height:1.6}
   <div class="title-row"><h1>The Archive</h1><span class="count mono" id="count"></span></div>
   <div class="dots" id="spectrum"></div>
 </header>
-<div class="bar"><input type="search" id="q" placeholder="Search everything" autocomplete="off"></div>
+<div class="sections" id="sections"><button data-s="archive">Archive</button><button data-s="videos">Videos</button><button data-s="reels">Reels</button></div>
+<div class="bar" id="bar"><input type="search" id="q" placeholder="Search everything" autocomplete="off"></div>
 <div class="tabs" id="tabs"></div>
 <div class="sortrow" id="sortrow"><span class="count mono" id="shown"></span>
   <select id="sort">
@@ -117,15 +131,16 @@ const clean = (t) => String(t || "").replace(/<[^>]+>/g, "").replace(/[*_]{1,3}/
 const shown = (i) => (i.tvdb && TM[i.id] && TM[i.id].nm) || i.title;
 const norm = (t) => (t || "").toLowerCase().replace(/[^a-z0-9]+/g, "");
 
-let LIB = [], TM = {}, EPS = null, tab = "continue", sortMode = "smart", limit = 60, query = "";
+let LIB = [], TM = {}, EPS = null, MEDIA = null, section = "archive", tab = "continue", sortMode = "smart", limit = 60, query = "";
 
 const TABS = [["continue", "Continue"], ["tv", "Television"], ["anime", "Anime"], ["film", "Films"], ["fav", "Favourites"], ["backlog", "Backlog"], ["stats", "Stats"]];
 
 async function boot() {
   try {
     const j = (f) => fetch(`data/${f}?v=${Date.now() >> 16}`).then((r) => (r.ok ? r.json() : {}));
-    [LIB, TM] = await Promise.all([j("library.json"), j("tmdb.json")]);
+    [LIB, TM, MEDIA] = await Promise.all([j("library.json"), j("tmdb.json"), j("media.json")]);
   } catch (e) { $("#main").innerHTML = `<div class="empty">Couldn't load the archive.</div>`; return; }
+  $("#sections").onclick = (e) => { const b = e.target.closest("button"); if (!b) return; section = b.dataset.s; render(); scrollTo(0, 0); };
   $("#tabs").innerHTML = TABS.map(([k, l]) => `<button data-t="${k}">${l}</button>`).join("");
   $("#tabs").onclick = (e) => { const b = e.target.closest("button"); if (!b) return; tab = b.dataset.t; query = ""; $("#q").value = ""; limit = 60; render(); };
   $("#q").oninput = (e) => { query = e.target.value; limit = 60; render(); };
@@ -164,7 +179,24 @@ function cover(i, w = "w185") {
   return m && m.p ? `${ph}<img loading="lazy" src="${IMG}${w}${m.p}" alt="" onerror="this.remove()">` : ph;
 }
 
+function mediaHtml() {
+  const m = MEDIA || {};
+  if (section === "videos") {
+    const y = m.youtube; if (!y) return `<div class="empty">Nothing here yet.</div>`;
+    return `<div class="media"><div class="frame yt"><iframe loading="lazy" src="https://www.youtube.com/embed/videoseries?list=UU${esc(y.channel.slice(2))}" title="Playable Thoughts on YouTube" allow="accelerometer; encrypted-media; picture-in-picture; fullscreen" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe></div>
+      <a class="cta" href="https://www.youtube.com/@${esc(y.handle)}" target="_blank" rel="noopener">Subscribe on YouTube ↗</a></div><div style="height:40px"></div>`;
+  }
+  const r = m.reels || [];
+  if (!r.length) return `<div class="empty">Nothing here yet.</div>`;
+  return `<div class="media"><div class="reels">${r.map((id) => `<div class="frame"><iframe loading="lazy" src="https://www.instagram.com/reel/${esc(id)}/embed" title="Instagram reel" allowtransparency="true" scrolling="no"></iframe></div>`).join("")}</div>
+    <a class="cta" href="https://www.instagram.com/${esc((m.instagram || {}).handle || "playable_thoughts")}" target="_blank" rel="noopener">Follow on Instagram ↗</a></div><div style="height:40px"></div>`;
+}
 function render() {
+  $("#sections").querySelectorAll("button").forEach((b) => b.classList.toggle("on", b.dataset.s === section));
+  const arch = section === "archive";
+  $("h1").textContent = arch ? "The Archive" : section === "videos" ? "Videos" : "Reels";
+  $("#bar").style.display = $("#tabs").style.display = arch ? "" : "none";
+  if (!arch) { $("#sortrow").style.display = "none"; $("#count").textContent = ""; $("#main").onclick = null; $("#main").innerHTML = mediaHtml(); return; }
   $("#tabs").querySelectorAll("button").forEach((b) => b.classList.toggle("on", b.dataset.t === tab && !query));
   $("#count").textContent = `${LIB.length} titles`;
   const spec = LIB.filter((i) => i.type === "show" && i.w > 0).sort((a, b) => b.w - a.w).slice(0, 60);
