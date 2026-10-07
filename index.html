@@ -94,6 +94,7 @@ footer{padding:0 16px 40px;font-size:10px;color:var(--muted);line-height:1.6}
 .media .frame{position:relative;border:1px solid var(--fg);background:var(--bg);box-shadow:4px 4px 0 var(--fg)}
 .media .yt{aspect-ratio:16/9}
 .media iframe{display:block;width:100%;height:100%;border:0}
+.vids{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:20px}
 .reels{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:20px}
 .reels .frame{height:560px}
 .cta{display:inline-block;justify-self:start;border:1px solid var(--fg);padding:9px 14px;color:var(--fg);text-decoration:none;font:700 13px 'Barlow Condensed',sans-serif;letter-spacing:.1em;text-transform:uppercase}
@@ -182,9 +183,10 @@ function cover(i, w = "w185") {
 function mediaHtml() {
   const m = MEDIA || {};
   if (section === "videos") {
-    const y = m.youtube; if (!y) return `<div class="empty">Nothing here yet.</div>`;
-    return `<div class="media"><div class="frame yt"><iframe loading="lazy" src="https://www.youtube.com/embed/videoseries?list=UU${esc(y.channel.slice(2))}" title="Playable Thoughts on YouTube" allow="accelerometer; encrypted-media; picture-in-picture; fullscreen" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe></div>
-      <a class="cta" href="https://www.youtube.com/@${esc(y.handle)}" target="_blank" rel="noopener">Subscribe on YouTube ↗</a></div><div style="height:40px"></div>`;
+    const y = m.youtube || {}, v = m.videos || [];
+    const link = `<a class="cta" href="https://www.youtube.com/@${esc(y.handle || "playablethoughts")}" target="_blank" rel="noopener">Subscribe on YouTube ↗</a>`;
+    if (!v.length) return `<div class="media">${link}</div>`;
+    return `<div class="media"><div class="vids">${v.map((id) => `<div class="frame yt"><iframe loading="lazy" src="https://www.youtube.com/embed/${esc(id)}" title="Playable Thoughts video" allow="encrypted-media; picture-in-picture; fullscreen" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe></div>`).join("")}</div>${link}</div><div style="height:40px"></div>`;
   }
   const r = m.reels || [];
   if (!r.length) return `<div class="empty">Nothing here yet.</div>`;
