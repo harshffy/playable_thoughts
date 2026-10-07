@@ -30,6 +30,11 @@ input[type=search]:focus{outline:none;box-shadow:3px 3px 0 var(--fg)}
 .tabs{display:flex;gap:2px;padding:8px 12px;overflow-x:auto;border-bottom:1px solid var(--line)}
 .tabs button{padding:6px 12px;border:1px solid transparent;color:var(--muted);font:600 14px 'Barlow Condensed',sans-serif;text-transform:uppercase;letter-spacing:.06em;white-space:nowrap}
 .tabs button.on{background:var(--fg);color:var(--bg)}
+.genres{display:flex;gap:6px;padding:8px 12px;overflow-x:auto;border-bottom:1px solid var(--line)}
+.genres button{flex-shrink:0;padding:4px 10px;border:1px solid var(--fg);background:var(--bg);color:var(--fg);font:500 12px Barlow,sans-serif;white-space:nowrap;cursor:pointer}
+.genres button i{font-style:normal;color:var(--muted);margin-left:4px}
+.genres button.on{background:var(--fg);color:var(--bg)}
+.genres button.on i{color:var(--bg);opacity:.7}
 .sortrow{display:flex;justify-content:space-between;align-items:center;padding:8px 16px}
 select{background:var(--bg);color:var(--fg);border:1px solid var(--fg);border-radius:0;padding:4px 8px;font:500 12px Barlow,sans-serif}
 .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:12px}
@@ -111,6 +116,7 @@ footer{padding:0 16px 40px;font-size:10px;color:var(--muted);line-height:1.6}
 <div class="sections" id="sections"><button data-s="archive">Archive</button><button data-s="videos">Videos</button><button data-s="reels">Reels</button></div>
 <div class="bar" id="bar"><input type="search" id="q" placeholder="Search everything" autocomplete="off"></div>
 <div class="tabs" id="tabs"></div>
+<div class="genres" id="genres"></div>
 <div class="sortrow" id="sortrow"><span class="count mono" id="shown"></span>
   <select id="sort">
     <option value="smart">Most watched</option><option value="seq">Recently added</option>
@@ -133,7 +139,7 @@ const clean = (t) => String(t || "").replace(/<[^>]+>/g, "").replace(/[*_]{1,3}/
 const shown = (i) => (i.tvdb && TM[i.id] && TM[i.id].nm) || i.title;
 const norm = (t) => (t || "").toLowerCase().replace(/[^a-z0-9]+/g, "");
 
-let LIB = [], TM = {}, EPS = null, MEDIA = null, section = "archive", tab = "continue", sortMode = "smart", limit = 60, query = "";
+let LIB = [], TM = {}, EPS = null, MEDIA = null, section = "archive", genre = "", tab = "continue", sortMode = "smart", limit = 60, query = "";
 
 const TABS = [["continue", "Continue"], ["tv", "Television"], ["anime", "Anime"], ["film", "Films"], ["fav", "Favourites"], ["backlog", "Backlog"], ["stats", "Stats"]];
 
@@ -144,7 +150,8 @@ async function boot() {
   } catch (e) { $("#main").innerHTML = `<div class="empty">Couldn't load the archive.</div>`; return; }
   $("#sections").onclick = (e) => { const b = e.target.closest("button"); if (!b) return; section = b.dataset.s; render(); scrollTo(0, 0); };
   $("#tabs").innerHTML = TABS.map(([k, l]) => `<button data-t="${k}">${l}</button>`).join("");
-  $("#tabs").onclick = (e) => { const b = e.target.closest("button"); if (!b) return; tab = b.dataset.t; query = ""; $("#q").value = ""; limit = 60; render(); };
+  $("#tabs").onclick = (e) => { const b = e.target.closest("button"); if (!b) return; tab = b.dataset.t; query = ""; genre = ""; $("#q").value = ""; limit = 60; render(); };
+  $("#genres").onclick = (e) => { const b = e.target.closest("button"); if (!b) return; genre = b.dataset.g; limit = 60; render(); };
   $("#q").oninput = (e) => { query = e.target.value; limit = 60; render(); };
   $("#sort").onchange = (e) => { sortMode = e.target.value; limit = 60; render(); };
   $("#scrim").onclick = (e) => { if (e.target.id === "scrim") closeSheet(); };
@@ -164,14 +171,31 @@ function sorted(list) {
   }[sortMode];
   return a.sort((x, y) => cmp(x, y) || x.title.localeCompare(y.title));
 }
-function visible() {
+const GMAP = { "Science Fiction": ["Sci-Fi"], "Sci-Fi & Fantasy": ["Sci-Fi", "Fantasy"], "Action & Adventure": ["Action", "Adventure"], "War & Politics": ["War"], Animation: ["Animated"] };
+const GC = {};
+function gtags(i) {
+  if (GC[i.id]) return GC[i.id];
+  const m = TM[i.id] || {}, set = new Set();
+  (m.g || []).forEach((g) => (GMAP[g] || [g]).forEach((x) => set.add(x)));
+  if (i.shelf === "anime") set.add("Anime");
+  if ((m.kw || []).some((k) => /psycholog/.test(k))) set.add("Psychological");
+  return (GC[i.id] = [...set]);
+}
+function base() {
   let l = LIB;
   if (query.trim()) { const t = query.toLowerCase(); l = l.filter((i) => i.title.toLowerCase().includes(t) || (i.original || "").toLowerCase().includes(t)); }
   else if (tab === "continue") l = l.filter((i) => i.s === 0);
   else if (tab === "fav") l = l.filter((i) => i.f);
   else if (tab === "backlog") l = l.filter((i) => i.s === 2);
   else if (tab !== "stats") l = l.filter((i) => i.shelf === tab);
-  return sorted(l);
+  return l;
+}
+function visible() { const l = base(); return sorted(genre ? l.filter((i) => gtags(i).includes(genre)) : l); }
+function genreBar() {
+  const c = {}; base().forEach((i) => gtags(i).forEach((g) => (c[g] = (c[g] || 0) + 1)));
+  if (genre && !c[genre]) genre = "";
+  const all = Object.entries(c).filter(([, n]) => n >= 2).sort((a, b) => b[1] - a[1]);
+  $("#genres").innerHTML = `<button data-g="" class="${genre ? "" : "on"}">All</button>` + all.map(([g, n]) => `<button data-g="${esc(g)}" class="${genre === g ? "on" : ""}">${esc(g)}<i>${n}</i></button>`).join("");
 }
 
 function cover(i, w = "w185") {
@@ -198,7 +222,7 @@ function render() {
   $("#sections").querySelectorAll("button").forEach((b) => b.classList.toggle("on", b.dataset.s === section));
   const arch = section === "archive";
   $("h1").textContent = arch ? "The Archive" : section === "videos" ? "Videos" : "Reels";
-  $("#bar").style.display = $("#tabs").style.display = arch ? "" : "none";
+  $("#bar").style.display = $("#tabs").style.display = $("#genres").style.display = arch ? "" : "none";
   if (!arch) { $("#sortrow").style.display = "none"; $("#count").textContent = ""; $("#main").onclick = null; $("#main").innerHTML = mediaHtml(); return; }
   $("#tabs").querySelectorAll("button").forEach((b) => b.classList.toggle("on", b.dataset.t === tab && !query));
   $("#count").textContent = `${LIB.length} titles`;
@@ -210,7 +234,9 @@ function render() {
   const stats = tab === "stats" && !query;
   $("#sortrow").style.display = stats ? "none" : "flex";
   $("#sort").value = sortMode;
+  $("#genres").style.display = stats ? "none" : "";
   if (stats) { $("#main").innerHTML = statsHtml(); return; }
+  genreBar();
   const v = visible();
   $("#shown").textContent = `${v.length} shown`;
   if (!v.length) { $("#main").innerHTML = `<div class="empty">${query ? "Nothing matches that." : "Nothing on this shelf yet."}</div>`; return; }

@@ -24,7 +24,7 @@ async function get(path, params = {}, tries = 4) {
 const yr = (d) => (d || "").slice(0, 4);
 
 async function detail(kind, id) {
-  const d = await get(`/${kind}/${id}`, { append_to_response: "credits,external_ids,watch/providers,videos,recommendations,reviews" });
+  const d = await get(`/${kind}/${id}`, { append_to_response: "credits,external_ids,watch/providers,videos,recommendations,reviews,keywords" });
   const prov = d["watch/providers"]?.results?.IN;
   const vids = (d.videos?.results || []).filter((x) => x.site === "YouTube");
   const tr = vids.find((x) => x.type === "Trailer" && x.official) || vids.find((x) => x.type === "Trailer") || vids.find((x) => x.type === "Teaser");
@@ -42,6 +42,7 @@ async function detail(kind, id) {
     tr, wp: [...new Set((prov?.flatrate || []).map((x) => x.provider_name))].slice(0, 6),
     rc: (d.recommendations?.results || []).slice(0, 10).map((x) => ({ id: x.id, k: x.media_type || kind, n: x.title || x.name || "", y: yr(x.release_date || x.first_air_date), p: x.poster_path || "" })),
     rv: (d.reviews?.results || []).slice(0, 3).map((x) => ({ a: x.author || "", r: x.author_details?.rating || 0, t: (x.content || "").replace(/\s+/g, " ").slice(0, 500) })),
+    kw: ((d.keywords?.keywords || d.keywords?.results || []).map((x) => x.name.toLowerCase())).slice(0, 25),
     ns: d.number_of_seasons || 0, ne: d.number_of_episodes || 0,
     sn: (d.seasons || []).filter((x) => x.season_number > 0 && x.episode_count > 0).map((x) => [x.season_number, x.episode_count]),
     st: d.status || "", u: now,
@@ -114,6 +115,7 @@ const jobs = lib.filter((it) => {
   if (o && (m.t !== o.t || m.k !== o.k)) return true;
   if (m.nf) return (m.rv || 0) < RV || now - (m.u || 0) > 30 * DAY; // retry misses when matching improves, or monthly
   if ((m.dp || 0) < 3 && !m.u) return true;
+  if (!m.nf && m.kw === undefined) return true;     // backfill keywords (used for the Psychological filter)
   return live(m) && now - (m.u || 0) > 6 * DAY;         // airing shows refresh weekly
 });
 console.log(`${jobs.length} of ${lib.length} titles need metadata`);
