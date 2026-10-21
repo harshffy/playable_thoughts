@@ -866,5 +866,6 @@
 {"id":"m:x-786d9","title":"Burning","original":"버닝","type":"film","shelf":"film","year":"2019","w":0,"s":2,"f":0,"r":0,"n":"","x":0,"seq":0},
 {"id":"m:the-bourne-supremacy-c3afb","title":"The Bourne Supremacy","type":"film","shelf":"film","w":0,"s":1,"f":0,"r":0,"n":"","x":0,"seq":21,"added":"2026-10-19T16:35:57.882Z","year":"2004"},
 {"id":"m:war-dogs-eb12f","title":"War Dogs","type":"film","shelf":"film","w":0,"s":1,"f":0,"r":0,"n":"","x":0,"seq":22,"added":"2026-10-20T11:06:55.585Z","year":"2016"},
-{"id":"m:dumb-money-7d606","title":"Dumb Money","type":"film","shelf":"film","w":0,"s":1,"f":0,"r":0,"n":"","x":0,"seq":23,"added":"2026-10-20T16:20:59.203Z","year":"2023"}
+{"id":"m:dumb-money-7d606","title":"Dumb Money","type":"film","shelf":"film","w":0,"s":1,"f":0,"r":0,"n":"","x":0,"seq":23,"added":"2026-10-20T16:20:59.203Z","year":"2023"},
+{"id":"m:margin-call-65d90","title":"Margin Call","type":"film","shelf":"film","w":0,"s":1,"f":0,"r":0,"n":"","x":0,"seq":25,"added":"2026-10-21T13:36:34.029Z","year":"2011"}
 ]
